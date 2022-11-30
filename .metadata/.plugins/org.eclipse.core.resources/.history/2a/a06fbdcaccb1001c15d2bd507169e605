@@ -1,0 +1,47 @@
+package com.kh.model.dao;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import com.kh.model.vo.Employee;
+
+public class EmployeeDAO {
+	
+	public ArrayList<Employee> selectAll(){
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1522:orcl", "SCOTT", "SCOTT");
+			String query = "SELECT * FROM EMP";
+			
+			Statement stmt = conn.createStatement();
+			ResultSet rset = stmt.executeQuery(query);//리절트셋에 정보를 다 담아서 리스트를 이용해 하나하나 담을 수 있게
+		
+			ArrayList<Employee> list = new ArrayList();
+			while(rset.next()) {//while(조건식) 조건식이 맞으면 true반환
+				int empNo = rset.getInt("EMPNO");
+				String empName = rset.getString("ENAME");
+				String job = rset.getString("JOB");
+				int mgr = rset.getInt("MGR");
+				Date hireDate = rset.getDate("HIREDATE");
+				int sal = rset.getInt("SAL");
+				int comm = rset.getInt("COMM");
+				int deptNo = rset.getInt("DEPTNO");
+				
+				Employee e = new Employee(empNo, empName, job, mgr, hireDate, sal, comm, deptNo);
+				list.add(e);
+			}
+		
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}

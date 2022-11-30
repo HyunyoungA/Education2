@@ -1,0 +1,15 @@
+package com.kh.conteoller;
+
+import com.kh.model.dao.MemberDAO;
+import com.kh.view.MemberMenu;
+
+public class MemberController {
+	private MemberMenu menu = new MemberMenu();
+	private MemberDAO dao = new MemberDAO();
+	
+	
+	public void insertMember() {
+		
+	}
+
+}

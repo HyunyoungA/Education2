@@ -1,0 +1,13 @@
+package com.kh.view;
+
+import java.util.Scanner;
+
+import com.kh.controller.EmployeeController;
+
+public class Menu {
+	private Scanner sc = new Scanner(System.in);
+	
+	public void mainMenu() {
+		EmployeeController ec = new EmployeeController();
+	}
+}

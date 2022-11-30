@@ -1,0 +1,30 @@
+package com.kh.controller;
+
+import com.kh.medol.vo.Member;
+import com.kh.model.service.MemberService;
+import com.kh.view.MemberMenu;
+
+public class MemberController {
+	private MemberMenu menu = new MemberMenu();
+	private MemberService mService = new MemberService();
+	//새 회원 등록
+	public void insertMember() {//컨트롤러는 DAO와 VIEW 연결
+		Member mem = menu.insertMember();
+		int result = mService.insertMember();
+		if(result > 0) {
+			System.out.println(result + "");
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

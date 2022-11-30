@@ -1,0 +1,10 @@
+package com.kh.controller;
+
+public class EmployeeController {
+	
+	//전체 사원 정보 조회
+	public void selectAll() {
+		
+	}
+	
+}

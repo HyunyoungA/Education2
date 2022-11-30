@@ -1,0 +1,5 @@
+package com.kh.medel.vo;
+
+public class Member {
+
+}

@@ -1,0 +1,11 @@
+package com.kh.view;
+
+import java.util.Scanner;
+
+public class MemberMenu {
+
+	public void mainMenu() {
+		private Scanner sc = new Scanner(System.in);
+	}
+
+}

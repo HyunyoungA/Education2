@@ -1,0 +1,26 @@
+package com.kh.model.service;
+
+import java.sql.Connection;
+
+import static com.kh.common.JDBCTemplate.getConnection;//insertMember안에 JDBCTemplate을 생략해주기 위해서 변경
+import com.kh.medel.vo.Member;
+
+public class MemberService {
+	
+	/*
+	 <Service의 역할>
+	 1. controller로부터 인자 전달 받음
+	 2. Connection객체 생성
+	 3. DAO객체 생성 후 Controller한테 전달받은 인자와 conn 전달
+	 * */
+	
+	
+	
+	public int insertMember(Member mem) {//커넥션 받아오기
+//		Connection conn = JDBCTemplate.getConnection();//static
+		Connection conn = getConnection();
+		
+		return 0;
+	}
+	
+}

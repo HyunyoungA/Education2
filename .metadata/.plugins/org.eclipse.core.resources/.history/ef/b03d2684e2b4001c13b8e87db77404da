@@ -1,0 +1,14 @@
+package com.kh.model.service;
+
+import com.kh.model.dao.MemberDAO;
+
+public class MemberService {
+	private MemberDAO mDAO = new MemberDAO();
+
+	public int insertMember() {
+		
+		return 0;
+	}
+	
+	
+}

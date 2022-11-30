@@ -1,0 +1,15 @@
+package com.kh.common;
+
+import java.sql.Connection;
+
+public class JDBCemplate {
+	//싱글톤 패턴 : 프로그램 시작 시 메모리에 객체를 딱 한 개만 기록하게 하는 패턴(ex. Math)
+	//기본 생성자의 접근제한자 private, 모든 필드/메소드 static 
+	private static Connection conn = null;
+	
+	private JDBCemplate() {}
+	
+	public static Connection getConnection() {
+		return conn;
+	}
+}

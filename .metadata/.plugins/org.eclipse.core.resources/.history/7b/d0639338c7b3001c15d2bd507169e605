@@ -1,0 +1,16 @@
+package com.kh.conteoller;
+
+import com.kh.medel.vo.Member;
+import com.kh.model.dao.MemberDAO;
+import com.kh.view.MemberMenu;
+
+public class MemberController {
+	private MemberMenu menu = new MemberMenu();
+	private MemberDAO dao = new MemberDAO();
+	
+	//사용자가 원하는 사원정보 조회
+	public void insertMember() {
+		Member mem = menu.insertMember();
+	}
+
+}

@@ -1,0 +1,13 @@
+package com.kh.controller;
+
+import com.kh.model.dao.EmployeeDAO;
+
+public class EmployeeController {
+	private EmployeeDAO empDAO = new EmployeeDAO();
+	
+	//전체 사원 정보 조회
+	public void selectAll() {
+		empDAO.selectAll();
+	}
+	
+}

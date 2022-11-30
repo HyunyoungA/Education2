@@ -1,0 +1,29 @@
+package com.kh.controller;
+
+import com.kh.model.dao.EmployeeDAO;
+import com.kh.view.Menu;
+
+public class EmployeeController {
+	private EmployeeDAO empDAO = new EmployeeDAO();
+	private Menu menu = new Menu();
+	//전체 사원 정보 조회
+	public void selectAll() {
+		
+		
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

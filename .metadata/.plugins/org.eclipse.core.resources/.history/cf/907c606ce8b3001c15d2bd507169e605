@@ -1,0 +1,5 @@
+driver=oracle.jdbc.driver.OracleDriver
+url=jdbv:oracle:thin:@localhost:1522:orcl
+uername=MEMBER
+password=MEMBER
+#

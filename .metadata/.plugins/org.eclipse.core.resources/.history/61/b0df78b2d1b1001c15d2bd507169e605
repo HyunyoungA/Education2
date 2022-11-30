@@ -1,0 +1,35 @@
+package com.kh.controller;
+
+import java.util.ArrayList;
+
+import com.kh.model.dao.EmployeeDAO;
+import com.kh.model.vo.Employee;
+import com.kh.view.Menu;
+
+public class EmployeeController {
+	private EmployeeDAO empDAO = new EmployeeDAO();
+	private Menu menu = new Menu();
+	//전체 사원 정보 조회
+	public void selectAll() {
+		ArrayList<Employee> list = empDAO.selectAll();
+		
+		if(list.isEmpty()) {
+			syso
+		}
+		
+		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

@@ -1,0 +1,9 @@
+insertMember=INSERT INTO MEMBER VALUES(?, ?, ?, ?, ?, ?, ?, ?, SYSDATE)
+#selectMemberId=SELECT * FROM MEMBER WHERE MEMBER_ID LIKE
+selectMemberId=SELECT * FROM MEMBER WHERE MEMBER_ID LIKE ?
+selectMemberGen=SELECT * FROM MEMBER WHERE GENDER LIKE ?
+checkMember=SELECT COUNT(*) FROM MEMBER WHERE MEMBER_ID = ?
+updateMember1=
+updateMember2=
+updateMember3=
+updateMember4=

@@ -1,0 +1,36 @@
+package com.kh.conteoller;
+
+import com.kh.medel.vo.Member;
+import com.kh.model.dao.MemberDAO;
+import com.kh.model.service.MemberService;
+import com.kh.view.MemberMenu;
+
+public class MemberController {
+	private MemberMenu menu = new MemberMenu();
+//	private MemberDAO dao = new MemberDAO();
+	private MemberService mService = new MemberService();
+	
+	//사용자가 원하는 사원정보 조회
+	public void insertMember() {
+		Member mem = menu.insertMember();
+		
+		int result = mService.insertMember(mem);
+		
+		if(result > 0) {
+			menu.displaySuccess(result + "개의 행이 추가되었습니다.");
+		}else {
+			menu.displayError("데이터 삽입 과정 중 오류 발생");
+		}
+	}
+
+	public void selectMember() {
+		int sel = menu.selectMember();
+		
+		switch(sel) {
+		case 1: break;
+		case 2: break;
+		case 0: return;
+		}
+	}
+
+}

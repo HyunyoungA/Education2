@@ -1,0 +1,44 @@
+package com.kh.model.vo;
+
+public class Employee {
+//	-empNo:int
+//	-empName:String
+//	-job:String
+//	-mgr:int
+//	-hireDate:Date (java.sql)
+//	-sal:int
+//	-comm:int
+//	-deptNo:int
+//	
+//	+Employee()
+//	+Employee(job:String, sal:int, comm:int)
+//	+Employee(empNo:int, job:String, sal:int, comm:int)
+//	+Employee(empNo:int, empName:String, job:String, mgr:int, sal:int, comm:int, deptNo:int)
+//	+Employee(empNo:int, empName:String)
+//	
+//	
+	private int empNo;
+	private String empName;
+	private String job;
+	private int mgr;
+	private Date hireDate (java.sql);
+	private int sal;
+	private int comm;
+	private int deptNo;
+	
+	public Employee{}
+	public Employee(String job, int sal, int comm) {
+		
+	}
+	public Employee(int empNo, String job, int sal, int comm) {
+		
+	}
+	public Employee(int empNo, String empName, String job, int mgr, int sal, int comm, int deptNo) {
+		
+	}
+	public Employee(int empNo, String empName, String job, int mgr, Date hireDate, int sal, int comm, int deptNo) {
+		
+	}
+	
+	
+}

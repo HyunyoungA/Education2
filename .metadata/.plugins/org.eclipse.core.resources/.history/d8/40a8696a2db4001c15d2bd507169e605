@@ -1,0 +1,66 @@
+package com.kh.model.service;
+
+import java.sql.Connection;
+import java.util.ArrayList;
+
+import static com.kh.common.JDBCTemplate.commit;
+import static com.kh.common.JDBCTemplate.getConnection;//insertMember안에 JDBCTemplate을 생략해주기 위해서 변경
+import static com.kh.common.JDBCTemplate.rollback;
+
+
+import com.kh.medel.vo.Member;
+import com.kh.model.dao.MemberDAO;
+	
+	/*
+	 <Service의 역할>
+	 1. controller로부터 인자 전달 받음
+	 2. Connection객체 생성
+	 3. DAO객체 생성 후 Controller로부터 전달받은 인자와 conn 전달
+	 4. 트랜잭션 관리
+	 * */
+	
+public class MemberService {
+	private MemberDAO mDAO = new MemberDAO();
+	
+	public int insertMember(Member mem) {//커넥션 받아오기
+//		Connection conn = JDBCTemplate.getConnection();//static
+		Connection conn = getConnection();
+		
+		int result = mDAO.insertMember(mem, conn);//MemberDAO의 insertMember의 매개변수에 conn추가
+		
+		if(result > 0) {
+			commit(conn);
+		}else {
+			rollback(conn);
+		}
+		
+		return result;
+	}
+
+	public ArrayList<Member> selectMemberId(String id) {
+		Connection conn = getConnection();
+		ArrayList<Member> list = mDAO.selectMemberId(conn, id);
+		
+		return list;
+	}
+
+	public ArrayList<Member> selectGender(char gen) {
+		Connection conn = getConnection();
+		ArrayList<Member> list = mDAO.selectGender(conn, gen);
+		
+		return list;
+	}
+
+	public ArrayList<Member> selectAll() {
+		Connection conn = getConnection();
+		ArrayList<Member> list = mDAO.selectAll(conn);
+		
+		return list;
+	}
+
+	public int deleteMember(Member mem) {
+		return 0;
+	}
+
+	
+}

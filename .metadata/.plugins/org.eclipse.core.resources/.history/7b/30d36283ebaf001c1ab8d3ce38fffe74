@@ -1,0 +1,22 @@
+package com.kh.model.dao;
+
+import java.sql.DriverManager;
+
+public class EmployeeDAO {
+
+	public void selectAll() {
+		// JDBC드라이버 등록
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1521:xe", user, password)
+			//jdbc:oracle:thin -->jdbc드라이버 타입
+			//@127.0.0.1 --> 접근해야하는 데이터베이스의 ip주소값(내 컴퓨터에 대한 주소값)
+			//1521 : 오라클 listener의 포트번호
+			//xe : 오라클SID
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
+}

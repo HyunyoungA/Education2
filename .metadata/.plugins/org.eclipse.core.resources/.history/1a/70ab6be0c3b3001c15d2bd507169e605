@@ -1,0 +1,9 @@
+package com.kh.conteoller;
+
+public class MemberController {
+
+	public void insertMember() {
+		
+	}
+
+}

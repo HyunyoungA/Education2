@@ -1,0 +1,10 @@
+package com.kh.model.dao;
+
+public class EmployeeDAO {
+
+	public void selectAll() {
+		// JDBC드라이버 등록
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+	}
+
+}

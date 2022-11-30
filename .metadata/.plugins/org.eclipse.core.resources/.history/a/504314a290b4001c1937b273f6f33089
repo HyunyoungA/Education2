@@ -1,0 +1,5 @@
+driver=oracle.jdbc.driver.OracleDriver
+url=jdbc:oracle:thin:@localhost:1522:orcl
+username=MEMBER
+password=MEMBER
+checkMember=SELECT COUNT(*) FROM MEMBER WHERE MEMBER_ID = ?

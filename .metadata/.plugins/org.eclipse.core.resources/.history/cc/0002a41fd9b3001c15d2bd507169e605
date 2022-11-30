@@ -1,0 +1,95 @@
+package com.kh.common;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class JDBCemplate {
+	//싱글톤 패턴 : 프로그램 시작 시 메모리에 객체를 딱 한 개만 기록하게 하는 패턴(ex. Math)
+	//기본 생성자의 접근제한자 private, 모든 필드/메소드 static 
+	private static Connection conn = null;
+	
+	private JDBCemplate() {}
+	
+	public static Connection getConnection() {
+		
+		if(conn == null) {
+			try {
+				Class.forName("oracle.jdbc.driver.OracleDriver");
+				conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522:orcl", "MEMBER", "MEMBER");
+				conn.setAutoCommit(false);
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return conn;
+	}
+	
+	public static void commit(Connection conn) {
+		try {
+			if(conn != null && !conn.isClosed()) {
+				conn.commit();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public static void rollback(Connection conn) {
+		try {
+			if(conn != null && !conn.isClosed()) {
+				conn.rollback();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void close(Connection conn) {
+		try {
+			if(conn != null && !conn.isClosed()) {
+				conn.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void close(ResultSet rset) {//매개변수 타입달라서 오버로딩 가능
+		try {
+			if(rset !=null && !rset.isClosed()) {
+				rset.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void close(Statement stmt) {
+		try {
+			if(stmt != null && !stmt.isClosed()) {
+				stmt.close();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

@@ -1,0 +1,21 @@
+package com.kh.model.service;
+
+import java.sql.Connection;
+
+import com.kh.model.dao.MemberDAO;
+
+public class MemberService {
+	private MemberDAO mDAO = new MemberDAO();
+
+	public int insertMember() {
+		Connection conn = getConnection();
+		
+		
+		return 0;
+	}
+
+	
+	}
+	
+	
+}

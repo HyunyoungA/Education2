@@ -1,0 +1,229 @@
+package com.kh.model.dao;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Properties;
+
+import static com.kh.common.JDBCTemplate.close;
+import com.kh.medel.vo.Member;
+
+public class MemberDAO {
+	
+	private Properties prop = null;
+	
+	public MemberDAO() {
+		prop = new Properties();//기능을 불러오는 과정을 담을 만한 곳
+		try {
+			prop.load(new FileReader("query.properties"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public int insertMember(Member mem, Connection conn) {//MemberService의 매개변수 맞추기 위해 conn 추가
+	
+			/*<이전 프로젝트에서 DAL가 맡은 업무>
+			  1. JDBC드라이버 등록
+			  2. DB연결 Connection 객체 생성
+			  3. SQL 실행
+			  4. 드랜잭션 처리
+			  5. close, finally 자원 반납
+			  
+			  -->실제로는 DAO가 처리해야할 업무는 3번 업무 뿐,1,2,4,5은 DAO가 할 일이 아님.
+			  		1,2,4,5 업무는 DAO의 역할이 아니며 어디서든 공통적으로 이루어지는 업무이기 때문에 역할 분리 : com.kh.common.JDBCemplate
+			 */
+			
+		int result = 0;
+		PreparedStatement pstmt = null;
+//		String query = "INSERT INTO MEMBER VALUES(?, ?, ?, ?, ?, ?, ?, ?, SYSDATE)";
+		String query = prop.getProperty("insertMember");
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, mem.getMemberId());
+			pstmt.setString(2, mem.getMemberPwd());
+			pstmt.setString(3, mem.getMemberName());
+			pstmt.setString(4, mem.getGender()+"");
+			pstmt.setString(5, mem.getEmail());
+			pstmt.setString(6, mem.getPhone());
+			pstmt.setString(7, mem.getAddress());
+			pstmt.setInt(8, mem.getAge());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+//			JDBCTemplate.close(pstmt);
+			close(pstmt);//import에 static, close 추가해서 위에 코드 JDBCTamplate 생략가능.
+		}
+		return result;
+		
+	}
+
+	public ArrayList<Member> selectMemberId(Connection conn, String id) {
+		//방법1. String query = "SELECT * FROM MEMBER WHERE MEMBER_ID LIKE % + ID + %";-->완성형 쿼리
+		//방법2. String query = prop.getProperty("selectMemberId");//statement에서 쓸때
+		//query += "'%" + id + "%'";
+		
+//		Statement stmt = null;-->pstmt의 부모여서 stmt만 close해줘도 된다.
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		ArrayList<Member> list = new ArrayList<Member>();
+		
+//		String query ="SELECT * FROM MEMBER WHERE MEMBER_ID LIKE '%" + id + "%'";
+		String query = prop.getProperty("selectMemberId");
+		
+		try {
+//			stmt = conn.createStatement();
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "%" + id + "%");
+			//Statement는 싱글코테이션 들어가는데 PreparedStatement는 싱글코테이션 안들어감.
+			//PreparedStatement에 싱글코테이션 안들어가도 문제가 없음.-->위치홀더 쓸때 몇번째자리에 뭐가 들어가는지 채워넣어서(1, id)
+			//알아서 싱글코테이션이 들어간 상태로 쿼리를 전송해준다.(PreparedStatement의 특성)
+//			rset = stmt.executeQuery(query);
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				Member m = new Member(rset.getString("MEMBER_ID"),
+									  rset.getString("MEMBER_PWD"),
+									  rset.getString("MEMBER_NAME"),
+									  rset.getString("GENDER").charAt(0),
+									  rset.getString("EMAIL"),
+									  rset.getString("PHONE"),
+									  rset.getInt("AGE"),
+									  rset.getString("ADDRESS"),
+									  rset.getDate("ENROLL_DATE"));
+				list.add(m);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			close(rset);
+//			close(stmt);
+			close(pstmt);
+		}
+		return list;
+	}
+
+	public ArrayList<Member> selectGender(Connection conn, char gen) {
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		ArrayList<Member> list = new ArrayList<Member>();
+		String query = prop.getProperty("selectMemberGen");
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, gen + "");
+			
+			rset = pstmt.executeQuery();
+			while(rset.next()) {
+				Member m = new Member(rset.getString("MEMBER_ID"),
+									  rset.getString("MEMBER_PWD"),
+									  rset.getString("MEMBER_NAME"),
+									  rset.getString("GENDER").charAt(0),//fff해도 0번째꺼를 가져오기 때문에 f만 추출됨.
+									  rset.getString("EMAIL"),
+									  rset.getString("PHONE"),
+									  rset.getInt("AGE"),
+									  rset.getString("ADDRESS"),
+									  rset.getDate("ENROLL_DATE"));
+				list.add(m);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		return list;
+	}
+
+	public ArrayList<Member> selectAll(Connection conn) {
+		Statement stmt = null;
+		ResultSet rset = null;
+		ArrayList<Member> list = new ArrayList<Member>();
+		String query = "SELECT * FROM MEMBER";
+		
+		try {
+			stmt = conn.createStatement();
+			rset = stmt.executeQuery(query);
+			while(rset.next()) {
+				Member m = new Member(rset.getString("MEMBER_ID"),
+						  			  rset.getString("MEMBER_PWD"),
+						  			  rset.getString("MEMBER_NAME"),
+									  rset.getString("GENDER").charAt(0),
+									  rset.getString("EMAIL"),
+									  rset.getString("PHONE"),
+									  rset.getInt("AGE"),
+									  rset.getString("ADDRESS"),
+									  rset.getDate("ENROLL_DATE"));
+				list.add(m);
+								
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(stmt);
+		}
+		
+		return list;
+	}
+	
+	public int deleteMember(Connection conn, String memberId) {
+		int result = 0;
+		PreparedStatement pstmt = null;
+		String query = "DELETE FROM MEMBER WHERE MEMBER_ID = ?";
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, memberId);
+			result = pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(pstmt);
+		}
+		
+		return result;
+	}
+
+	public int checkMember(Connection conn, String memberId) {
+//		String query = "SELECT * FROM MEMBER WHERE MEMBER_ID = ?";
+//		String query = "SELECT COUNT(*) FRON MEMBER WHERE MEMBER_ID = ?";
+		String query = prop.getProperty("checkMember");
+		
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		int result = 0;
+		
+		try {
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, memberId);
+			rset = pstmt.executeQuery();//SELECT일때는 무조건 반환값은 ResultSet
+			
+			if(rset.next()) {
+//				result = rset.getInt("count(*)");
+				result = rset.getInt(1);//첫번째 컬럼에 대한 값을 가져오겠다.ResultSet.getInt(int columnIndex)
+			}
+			System.out.println(result);
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			close(rset);
+			close(pstmt);
+		}
+		
+		
+		return result;
+	}
+	
+}

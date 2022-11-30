@@ -1,0 +1,33 @@
+package com.kh.model.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import com.kh.model.vo.Employee;
+
+public class EmployeeDAO {
+	
+	public ArrayList<Employee> selectAll(){
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			Connection conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1522:orcl", "SCOTT", "SCOTT");
+			String query = "SELECT * FROM EMP";
+			
+			Statement stmt = conn.createStatement();
+			ResultSet rset = stmt.executeQuery(query);
+		
+		
+		
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+}

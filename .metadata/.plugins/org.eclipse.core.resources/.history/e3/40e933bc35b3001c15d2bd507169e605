@@ -1,0 +1,239 @@
+package com.kh.model.dao;
+
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
+import com.kh.model.vo.Employee;
+
+public class EmployeeDAO {
+	
+	public ArrayList<Employee> selectAll(){
+		ArrayList<Employee> list = null;
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rset = null;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@127.0.0.1:1522:orcl", "SCOTT", "SCOTT");
+			String query = "SELECT * FROM EMP";
+			
+			stmt = conn.createStatement();
+			rset = stmt.executeQuery(query);//리절트셋에 정보를 다 담아서 리스트를 이용해 하나하나 담을 수 있게
+		
+			list = new ArrayList();
+			while(rset.next()) {//while(조건식) 조건식이 맞으면 true반환
+				int empNo = rset.getInt("EMPNO");
+				String empName = rset.getString("ENAME");
+				String job = rset.getString("JOB");
+				int mgr = rset.getInt("MGR");
+				Date hireDate = rset.getDate("HIREDATE");
+				int sal = rset.getInt("SAL");
+				int comm = rset.getInt("COMM");
+				int deptNo = rset.getInt("DEPTNO");
+				
+				Employee e = new Employee(empNo, empName, job, mgr, hireDate, sal, comm, deptNo);
+				list.add(e);
+			}
+			System.out.println(list);
+		
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			
+			try {
+				rset.close();
+				stmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}return list;
+	} 
+
+	public Employee selectEmployee(int empNo) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rset = null;
+		Employee emp = null;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhist:1522:orcl");
+			conn.setAutoCommit(false);
+			String query = "SELECT * FROM EMP WHERE = ?";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, empNo);
+			rset = pstmt.executeQuery();
+			
+			if(rset.next()) {
+				String empName = rset.getString("ENAME");
+				String job = rset.getString("JOB");
+				int mgr = rset.getInt("MGR");
+				Date hireDate = rset.getDate("HIREDATE");
+				int sal = rset.getInt("SAL");
+				int comm = rset.getInt("COMM");
+				int deptNo = rset.getInt("DEPTNO");
+				
+				emp = new Employee(empNo, empName, job, mgr, hireDate, sal, comm, deptNo);
+				
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rset.close();
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}return emp;
+	}
+	
+	public int insertEmployee(Employee e) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522:orcl", "SCOTT", "SCOTT");
+			conn.setAutoCommit(false);
+			String query = "INSERT INTO EMP VALUES(?, ?, ?, ?, SYSDATE, ?, ?, ?)";
+			
+			pstmt = conn.prepareStatement(query);
+			pstmt.setInt(1, e.getEmpNo());
+			pstmt.setString(2, e.getEmpName());
+			pstmt.setString(3, e.getJob());
+			pstmt.setInt(4, e.getMgr());
+			pstmt.setInt(5, e.getSal());
+			pstmt.setInt(6, e.getComm());
+			pstmt.setInt(7, e.getDeptNo());
+			result = pstmt.executeUpdate();
+			
+			//트랜잭션 처리
+			if(result > 0) {
+				conn.commit();
+			}else {
+				conn.rollback();
+			}
+			
+		} catch (ClassNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} return result;
+	}
+	
+	//사번과 일치하는 사원의 정보 수정
+	public int updateEmployee(Employee emp) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522:orcl","SCOTT", "SCOTT");
+			conn.setAutoCommit(false);
+			String query = "UPDATE EMP SET JOB = ?, SAL = ?, COMM = ? WHERE EMPNO";
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, emp.getJob());
+			pstmt.setInt(2, emp.getSal());
+			pstmt.setInt(3, emp.getComm());
+			pstmt.setInt(4, emp.getEmpNo());
+			
+			result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				conn.commit();
+			}else {
+				conn.rollback();
+			}
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}return result;
+	}
+	
+	public int delecteEmployee(int empNo) {
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		int result = 0;
+		try {
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+			conn = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1522:orcl", "SOCOTT", "SCOTT");
+			conn.setAutoCommit(false);
+			String query = "DELECT FROM EMP WHERE EMPNO = ?";
+			pstmt = conn.prepareStatement(query);
+			
+			pstmt.setInt(1, empNo);
+			result = pstmt.executeUpdate();
+			
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
+		}return result;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

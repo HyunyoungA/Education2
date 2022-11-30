@@ -1,0 +1,3 @@
+insertMember=INSERT INTO MEMBER VALUES(?, ?, ?, ?, ?, ?, ?, ?, SYSDATE)
+#selectMemberId=SELECT * FROM MEMBER WHERE MEMBER_ID LIKE
+selectMemberId=SELECT * FROM MEMBER WHERE MEMBER_ID LIKE ?
